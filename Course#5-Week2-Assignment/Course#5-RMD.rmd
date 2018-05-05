@@ -1,3 +1,4 @@
+output: rmarkdown::github_document
 # Reproducible Research - Week #2 Assignment
 ####Author: Chennakrishnan VIjayarangan
 ####Date: 04-May-2018
