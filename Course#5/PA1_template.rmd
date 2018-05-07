@@ -1,12 +1,12 @@
 ---
-output: 
-html_document:
-  keep_md:TRUE
+output:
+  html_document:
+    keep_md: TRUE
 ---
 
 # Reproducible Research - Week #2 Assignment
-####Author: Chennakrishnan VIjayarangan
-####Date: 04-May-2018
+Author: Chennakrishnan VIjayarangan  
+Date: 04-May-2018
 
 ------
 
@@ -17,15 +17,15 @@ Read the CSV file, and load the data into a Dataframe
   inputDF <- read.csv("activity.csv")
 ```
 
-###Q1: What is mean total number of steps taken per day?  
+Q1: What is mean total number of steps taken per day?  
   
-#####Q1.1 - Calculate the total number of steps taken per day  
+Q1.1 - Calculate the total number of steps taken per day  
 Using Aggregate() function Calculated Total number of steps taken per day
 ```{r}
   totalStepsPerDay <- aggregate(steps ~ date, inputDF, sum)
 ```
   
-#####Q1.2 - Make a histogram of the total number of steps taken each day  
+Q1.2 - Make a histogram of the total number of steps taken each day  
 Load the library ggplot2
 ```{r}
 require("ggplot2")
@@ -38,7 +38,7 @@ Drawn the histogram using ggplot by passing the dataframe returned by the aggreg
       theme(legend.position="none")
 ```  
 
-#####Q1.3 - Calculate and report the mean and median of total number of steps taken per day
+Q1.3 - Calculate and report the mean and median of total number of steps taken per day
 Calculted and reported mean of total number of steps taken per day using mean()
 ```{r}
   mean(totalStepsPerDay$steps)
@@ -49,9 +49,9 @@ Calculated and reported Median of total number of steps taken per day using medi
   median(totalStepsPerDay$steps)
 ```
 
-###Q2: What is the average daily activity pattern?
+Q2: What is the average daily activity pattern?
 
-#####Q2.1 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+Q2.1 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 Using aggregate() function Calculated average number of steps taken per on time interval
 ```{r}
@@ -66,15 +66,15 @@ ggplot(avg_steps_OnInterval, aes(x= interval, y=steps)) +
     theme(legend.position="none")
 ```
 
-#####Q2.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+Q2.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```{r}
   avg_steps_OnInterval[which.max(avg_steps_OnInterval$steps),1]
 ```
 
-###Q3: Imputing missing values
+Q3: Imputing missing values
 
-#####Q3.1 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+Q3.1 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 Summary() returns the total number of missing values as well
 ```{r}
@@ -114,9 +114,9 @@ Calculated and reported Median of total number of steps taken per day using medi
 median(totalStepsPerDay$steps)
 ```
 
-###Q4: Are there differences in activity patterns between weekdays and weekends?
-  
-#####Q4.1 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+Q4: Are there differences in activity patterns between weekdays and weekends?
+
+Q4.1 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
   
 Using weekdays() function populated a newly created vector weekdays in the imputted DataFrame
 ```{r}

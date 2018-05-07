@@ -1,12 +1,12 @@
 ---
-output: 
-html_document:
-  keep_md:TRUE
+output:
+  html_document:
+    keep_md: TRUE
 ---
 
 # Reproducible Research - Week #2 Assignment
-####Author: Chennakrishnan VIjayarangan
-####Date: 04-May-2018
+Author: Chennakrishnan VIjayarangan  
+Date: 04-May-2018
 
 ------
 
@@ -18,16 +18,16 @@ Read the CSV file, and load the data into a Dataframe
   inputDF <- read.csv("activity.csv")
 ```
 
-###Q1: What is mean total number of steps taken per day?  
+Q1: What is mean total number of steps taken per day?  
   
-#####Q1.1 - Calculate the total number of steps taken per day  
+Q1.1 - Calculate the total number of steps taken per day  
 Using Aggregate() function Calculated Total number of steps taken per day
 
 ```r
   totalStepsPerDay <- aggregate(steps ~ date, inputDF, sum)
 ```
   
-#####Q1.2 - Make a histogram of the total number of steps taken each day  
+Q1.2 - Make a histogram of the total number of steps taken each day  
 Load the library ggplot2
 
 ```r
@@ -46,9 +46,9 @@ Drawn the histogram using ggplot by passing the dataframe returned by the aggreg
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="PA1_template_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
-#####Q1.3 - Calculate and report the mean and median of total number of steps taken per day
+Q1.3 - Calculate and report the mean and median of total number of steps taken per day
 Calculted and reported mean of total number of steps taken per day using mean()
 
 ```r
@@ -69,9 +69,9 @@ Calculated and reported Median of total number of steps taken per day using medi
 ## [1] 10765
 ```
 
-###Q2: What is the average daily activity pattern?
+Q2: What is the average daily activity pattern?
 
-#####Q2.1 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+Q2.1 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 Using aggregate() function Calculated average number of steps taken per on time interval
 
@@ -88,9 +88,9 @@ ggplot(avg_steps_OnInterval, aes(x= interval, y=steps)) +
     theme(legend.position="none")
 ```
 
-<img src="PA1_template_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
-#####Q2.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+Q2.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 
 ```r
@@ -101,9 +101,9 @@ ggplot(avg_steps_OnInterval, aes(x= interval, y=steps)) +
 ## [1] 835
 ```
 
-###Q3: Imputing missing values
+Q3: Imputing missing values
 
-#####Q3.1 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+Q3.1 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 Summary() returns the total number of missing values as well
 
@@ -153,7 +153,7 @@ Using ggplot2 drawn the histogram
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="PA1_template_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 Calculted and reported mean of total number of steps taken per day using mean()
 
@@ -175,9 +175,9 @@ median(totalStepsPerDay$steps)
 ## [1] 10766.19
 ```
 
-###Q4: Are there differences in activity patterns between weekdays and weekends?
-  
-#####Q4.1 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+Q4: Are there differences in activity patterns between weekdays and weekends?
+
+Q4.1 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
   
 Using weekdays() function populated a newly created vector weekdays in the imputted DataFrame
 
@@ -196,4 +196,4 @@ ggplot(Q4_ag_data, aes(x= interval, y=steps, color="weekend"))+
   theme(legend.position="none")
 ```
 
-<img src="PA1_template_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+![](PA1_template_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
