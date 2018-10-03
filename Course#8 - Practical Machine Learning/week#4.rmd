@@ -1,0 +1,94 @@
+---
+title: 'Practical Machine Learning - Week #4 Assignment'
+author: "Chennakrishnan Vijayarangan"
+date: "October 2, 2018"
+output: html_document
+---
+
+### Overview
+The objective this exercise is to predict the manner in which the exercise was done by 6 participants. Data collected from the personal activity tracker devices like Jawbone Up, Nick FuelBand, and Fitbit for 6 participants were used to train the prediction model. Details on the training data can be found in http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har.
+
+
+### Data Source
+The training data for this project are available here:
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here:
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+### Data Load and Import Library
+```{r warning=FALSE, message=FALSE}
+library(caret)              #Library for
+library(corrplot)           #Library for calculating Correlation and to draw Correlation plot
+
+
+#Reading the Training Data from CSV file, and instructing to release "NA", "#DIV/0!" and empty string as NA
+pmlTrain <- read.csv("pml-training.csv",na.strings = c("NA", "#DIV/0!", ""))
+pmlTest <- read.csv("pml-testing.csv",na.strings = c("NA", "#DIV/0!", ""))
+```
+
+### Data Analysis and Data Cleaning
+
+```{r}
+dim(pmlTrain)            #Understanding the Training dataset structure
+```
+Training dataset has 19622 observations and 160 variable. Removing the variables that have NA's.
+```{r}
+#Removing the variable that has NA's and First two columns from the training dataset
+pml_Cleandata <- pmlTrain[, colSums(is.na(pmlTrain)) == 0]
+dim(pml_Cleandata)
+```
+After the first level of cleanup, no.of variables in the training dataset went down to 60 from 160. As next level of cleanup removing the first two variables (observation number and participants name) as it doesn't add value to this prediction analysis.
+```{r}
+pml_Cleandata <- pml_Cleandata[,c(3:60)]
+```
+
+Check for the existence of multicollinearity in the training dataset by calculating the correlation coefficients between the variables before generating the prediction model
+
+```{r fig.height=45, fig.width=25,fig.asp=1}
+corrPlot <- cor(pml_Cleandata[,-c(3,4,58)])
+
+corrplot(corrPlot, method = "color", outline = T, addgrid.col = "darkgray", order="hclust", addrect = 4, rect.col = "black", rect.lwd = 5,cl.pos = "b", tl.col = "indianred4", tl.cex = 1.5, cl.cex = 1.5, addCoef.col = "white", number.digits = 2, number.cex = 0.75, col = colorRampPalette(c("darkred","white","midnightblue"))(100))
+```
+Above chart very clearly depicts that multicollinearity exists in the training dataset. 
+
+### Prediction Model
+The response variable `classe` in the training dataset is a categorical variable, and with the existence of multicollinearity in the dataset with high degree, random forest prediction model would be the better approach. Random forest will be the ideal options as it works much better in avoiding the overfit.
+
+#### Data Partitioning
+Partitioning input dataset as a training dataset and test dataset is the recommended approach to develop the best fit model. In preparation for developing the prediction model, the training dataset will be split at  70:30 ratio. In this 70% of the data from the training dataset will be used to train the model, and 30% of the data will be used to test the model.
+
+```{r}
+set.seed(1234)
+dataSplit <- createDataPartition(pml_Cleandata$classe, p=0.70, list=F)
+trainData <- pml_Cleandata[dataSplit,]
+testData <- pml_Cleandata[-dataSplit,]
+```
+#### Cross Validation and Random Forest Implementation
+Performing cross-validation on the training dataset to develop a stable model.  Cross-validation is implemented by passing the value `cv` to `method` argument in `trainControl()` function. For our exercise cross-validation is performed at 5 folds.  Random forest approach is implemented by passing the value `ranger` to the `method`  argument in the `train()` function.
+
+```{r message=FALSE, warning=FALSE, eval=TRUE}
+trControl = trainControl(method = "cv", number=5,verboseIter = FALSE)
+
+pml_model <- train(classe ~ .,
+                   data=trainData,
+                   method="ranger",
+                   trControl= trControl,
+                   tuneLength=3)
+```
+Testing the random forest model by predicting the response variable `classe` in the test dataset, and verifying the accuracy by calling the `confusionMatrix()`
+```{r eval=TRUE}
+ClasseRF <- predict(pml_model, testData)
+confusionMatrix(testData$classe, ClasseRF)
+```
+
+From the confusion Matrix output, the out of sample error is less than < 0.001, which confirms the random forest model that was developed was perfect to close in prediction.
+
+### Prediction on Test Data
+Predicting the response variable for the test data published for this exercise
+```{r eval=TRUE}
+predictClasse <- predict(pml_model, pmlTest, type="raw")
+predictClasse
+```
